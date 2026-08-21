@@ -71,6 +71,10 @@ ramips_setup_interfaces()
 		ucidef_add_switch "switch0" \
 			"2:lan" "3:lan" "4:lan" "1:wan" "6@eth0"
 		;;
+	huasifei,shf285)
+		ucidef_add_switch "switch0" \
+			"1:lan" "2:lan" "3:lan" "4:lan" "0:wan" "6@eth0"
+		;;
 	hilink,hlk-7628n|\
 	hilink,hlk-7688a|\
 	hiwifi,hc5861b|\
