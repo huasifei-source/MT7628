@@ -203,6 +203,10 @@ ramips_setup_macs()
 		wan_mac=$(mtd_get_mac_binary factory 0x22)
 		label_mac=$wan_mac
 		;;
+	huasifei,shf280)
+		# DTS: eth0 (lan) = factory 0x4 + 1; WAN = eth0 + 1 (factory + 2)
+		wan_mac=$(macaddr_add "$(mtd_get_mac_binary factory 0x4)" 2)
+		;;
 	hiwifi,hc5661a|\
 	hiwifi,hc5761a|\
 	hiwifi,hc5861b)

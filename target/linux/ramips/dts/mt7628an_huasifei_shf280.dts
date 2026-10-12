@@ -83,7 +83,10 @@
 };
 
 &ethernet {
+	/* factory 0x4 is the WiFi MAC; wired base = WiFi + 1 (matches
+	 * the MAC Breed reports for the stock firmware). */
 	mtd-mac-address = <&factory 0x4>;
+	mtd-mac-address-increment = <1>;
 };
 
 &ehci {
