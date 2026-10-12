@@ -1,0 +1,134 @@
+// SPDX-License-Identifier: GPL-2.0-or-later OR MIT
+
+#include "mt7628an.dtsi"
+
+#include <dt-bindings/gpio/gpio.h>
+#include <dt-bindings/input/input.h>
+
+/ {
+	compatible = "huasifei,shf280", "mediatek,mt7628an-soc";
+	model = "HUASIFEI SHF280";
+
+	aliases {
+		led-boot = &led_wlan;
+		led-failsafe = &led_wlan;
+		led-running = &led_wlan;
+		led-upgrade = &led_wlan;
+		label-mac-device = &ethernet;
+	};
+
+	chosen {
+		bootargs = "console=ttyS0,115200";
+	};
+
+	leds {
+		compatible = "gpio-leds";
+
+		/* GPIO table (WS-SHF280 Ver1.0):
+		 * GPIO44 LED2 wifi (active high), GPIO39/40/41 LED3/4/5
+		 * port indicators (active low).  Port LED mapping is
+		 * provisional: LED3=lan1 LED4=lan2 LED5=wan. */
+		led_wlan: wlan {
+			label = "green:wlan";
+			gpios = <&gpio 44 GPIO_ACTIVE_HIGH>;
+		};
+
+		lan1 {
+			label = "green:lan1";
+			gpios = <&gpio 39 GPIO_ACTIVE_LOW>;
+		};
+
+		lan2 {
+			label = "green:lan2";
+			gpios = <&gpio 40 GPIO_ACTIVE_LOW>;
+		};
+
+		wan {
+			label = "green:wan";
+			gpios = <&gpio 41 GPIO_ACTIVE_LOW>;
+		};
+	};
+
+	gpio-keys {
+		compatible = "gpio-keys";
+
+		reset {
+			label = "reset";
+			gpios = <&gpio 38 GPIO_ACTIVE_LOW>;
+			linux,code = <KEY_RESTART>;
+		};
+	};
+};
+
+&state_default {
+	gpio {
+		/* uart1 covers GPIO39/40, i2s/wled_an region covers 41/44
+		 * (same set proven by buffalo_wcr-1166ds on GPIO39-41) */
+		groups = "uart1", "wled_an", "p0led_an", "p1led_an",
+			 "p2led_an", "p3led_an", "p4led_an",
+			 "wdt", "refclk", "gpio", "i2s";
+		function = "gpio";
+	};
+};
+
+&esw {
+	/* PHY2=lan1, PHY3=lan2 (link-changed 0x04/0x08), PHY4=wan (0x10).
+	 * portmap bits = LAN ports; enabled-but-unmapped = WAN. */
+	mediatek,portmap = <0x0c>;
+	mediatek,portdisable = <0x23>;
+};
+
+&wmac {
+	status = "okay";
+};
+
+&ethernet {
+	mtd-mac-address = <&factory 0x4>;
+};
+
+&ehci {
+	status = "okay";
+};
+
+&ohci {
+	status = "okay";
+};
+
+&spi0 {
+	status = "okay";
+
+	flash@0 {
+		compatible = "jedec,spi-nor";
+		reg = <0>;
+		spi-max-frequency = <30000000>;
+
+		partitions {
+			compatible = "fixed-partitions";
+			#address-cells = <1>;
+			#size-cells = <1>;
+
+			partition@0 {
+				label = "u-boot";
+				reg = <0x0 0x30000>;
+				read-only;
+			};
+
+			partition@30000 {
+				label = "u-boot-env";
+				reg = <0x30000 0x10000>;
+				read-only;
+			};
+
+			factory: partition@40000 {
+				label = "factory";
+				reg = <0x40000 0x10000>;
+			};
+
+			partition@50000 {
+				compatible = "denx,uimage";
+				label = "firmware";
+				reg = <0x50000 0xfb0000>;
+			};
+		};
+	};
+};

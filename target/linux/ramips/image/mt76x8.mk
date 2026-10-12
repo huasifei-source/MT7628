@@ -854,3 +854,12 @@ define Device/huasifei_shf285
   SUPPORTED_DEVICES += huasifei,shf285
 endef
 TARGET_DEVICES += huasifei_shf285
+
+define Device/huasifei_shf280
+  IMAGE_SIZE := 16064k
+  DEVICE_VENDOR := Huasifei
+  DEVICE_MODEL := SHF280
+  DEVICE_PACKAGES := kmod-usb2 kmod-usb-ohci luci-light kmod-ipt-offload kmod-nf-flow iptables-mod-offload atenl
+  SUPPORTED_DEVICES += huasifei,shf280
+endef
+TARGET_DEVICES += huasifei_shf280
