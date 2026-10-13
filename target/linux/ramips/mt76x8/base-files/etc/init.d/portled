@@ -1,0 +1,26 @@
+#!/bin/sh /etc/rc.common
+# portled - per-port link LED service for boards with GPIO port LEDs.
+# Board mapping table lives here; the polling daemon is
+# /usr/bin/portled-daemon.
+
+START=99
+USE_PROCD=1
+
+start_service() {
+	local map
+
+	case "$(board_name)" in
+	huasifei,shf280)
+		# PHY2=lan1, PHY3=lan2, PHY4=wan (link-changed masks 0x04/08/10)
+		map="2:green:lan1 3:green:lan2 4:green:wan"
+		;;
+	*)
+		return 0
+		;;
+	esac
+
+	procd_open_instance
+	procd_set_param command /usr/bin/portled-daemon "$map"
+	procd_set_param respawn 3600 5 5
+	procd_close_instance
+}

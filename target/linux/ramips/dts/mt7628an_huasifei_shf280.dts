@@ -24,10 +24,11 @@
 	leds {
 		compatible = "gpio-leds";
 
-		/* GPIO table (WS-SHF280 Ver1.0):
-		 * GPIO44 LED2 wifi (active high), GPIO39/40/41 LED3/4/5
-		 * port indicators (active low).  Port LED mapping is
-		 * provisional: LED3=lan1 LED4=lan2 LED5=wan. */
+		/* GPIO mapping verified on bench (10-13):
+		 * GPIO44 = wifi LED (active high)
+		 * GPIO39 = wan LED, GPIO40 = lan2 LED, GPIO41 = lan1 LED
+		 * (all active low).  Port LEDs are driven by
+		 * /etc/init.d/portled from the switch link state. */
 		led_wlan: wlan {
 			label = "green:wlan";
 			gpios = <&gpio 44 GPIO_ACTIVE_HIGH>;
@@ -35,7 +36,7 @@
 
 		lan1 {
 			label = "green:lan1";
-			gpios = <&gpio 39 GPIO_ACTIVE_LOW>;
+			gpios = <&gpio 41 GPIO_ACTIVE_LOW>;
 		};
 
 		lan2 {
@@ -45,7 +46,7 @@
 
 		wan {
 			label = "green:wan";
-			gpios = <&gpio 41 GPIO_ACTIVE_LOW>;
+			gpios = <&gpio 39 GPIO_ACTIVE_LOW>;
 		};
 	};
 

@@ -1,0 +1,39 @@
+#!/bin/sh
+# portled-daemon - per-port link LEDs driven from switch state.
+#
+# For boards whose RJ45 port LEDs are plain GPIOs (no hardware
+# switch-LED wiring): poll the switch driver and light the LED of
+# each port whose link is up.  Steady on/off, no blinking - same
+# behaviour as the stock firmware.
+#
+# Port/LED mapping is configured by the caller (see the board cases
+# in /etc/init.d/portled); format: "<port>:<led-label> ..."
+
+MAP="${1:-}"
+
+[ -n "$MAP" ] || exit 1
+
+LED_BASE=/sys/class/leds
+
+# Clear any leftover trigger once (netdev/heartbeat etc.), then we
+# own the brightness directly.  Also covers stale LED config that
+# survived a sysupgrade with settings kept.
+for m in $MAP; do
+	led="${m#*:}"
+	echo none > "$LED_BASE/$led/trigger" 2>/dev/null
+done
+
+while :; do
+	show="$(swconfig dev switch0 show 2>/dev/null)"
+	for m in $MAP; do
+		port="${m%%:*}"
+		led="${m#*:}"
+		case "$show" in
+			*"port:$port link:up"*)
+				echo 1 > "$LED_BASE/$led/brightness" 2>/dev/null ;;
+			*)
+				echo 0 > "$LED_BASE/$led/brightness" 2>/dev/null ;;
+		esac
+	done
+	sleep 1
+done
