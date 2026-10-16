@@ -834,6 +834,28 @@
                     "ncm"
                 ]
             },
+            "fg132": {
+                "id": "2cb7:0118",
+                "manufacturer_id": "2cb7",
+                "manufacturer": "fibocom",
+                "platform": "unisoc",
+                "data_interface": "usb",
+                "pdp_index": "1",
+                "modes": [
+                    "ecm"
+                ]
+            },
+            "fg132-gl": {
+                "id": "2cb7:0118",
+                "manufacturer_id": "2cb7",
+                "manufacturer": "fibocom",
+                "platform": "unisoc",
+                "data_interface": "usb",
+                "pdp_index": "1",
+                "modes": [
+                    "ecm"
+                ]
+            },
             "fm350-gl": {
                 "manufacturer_id": "0e8d",
                 "manufacturer": "fibocom",
