@@ -83,6 +83,7 @@
 
 &ethernet {
 	mtd-mac-address = <&factory 0x4>;
+	mtd-mac-address-increment = <1>;   /* eth0 = wifi base + 1 (lan), wan = +2 via 02_network */
 };
 
 &ehci {
