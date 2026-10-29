@@ -835,14 +835,15 @@
                 ]
             },
             "fg132": {
-                "id": "2cb7:0118",
+                "id": "2cb7:0112",
                 "manufacturer_id": "2cb7",
                 "manufacturer": "fibocom",
                 "platform": "unisoc",
                 "data_interface": "usb",
                 "pdp_index": "1",
                 "modes": [
-                    "ecm"
+                    "ecm",
+                    "qmi"
                 ]
             },
             "fg132-gl": {
@@ -853,7 +854,8 @@
                 "data_interface": "usb",
                 "pdp_index": "1",
                 "modes": [
-                    "ecm"
+                    "ecm",
+                    "qmi"
                 ]
             },
             "fm350-gl": {
