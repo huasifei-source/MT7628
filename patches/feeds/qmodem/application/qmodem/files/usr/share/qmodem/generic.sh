@@ -596,7 +596,21 @@ get_connect_status()
             result=$(cmd_cgpaddr "$at_port" "$pdp_index" | grep $expect)
             if [ -n "$result" ];then
                 ipv6=$(echo $result | grep -oE "\b([0-9a-fA-F]{0,4}:){2,7}[0-9a-fA-F]{0,4}\b")
+                if [ -z "$ipv6" ] && [ "$platform" = "asrmicro" ]; then   # gate on platform: base_info() clobbers $manufacturer
+                    # A76XX prints IPv6 unquoted as 16 dot-separated decimal bytes;
+                    # strip it before v4 extraction so its head bytes are not
+                    # mistaken for an IPv4 address
+                    v6dec=$(echo $result | grep -oE "[0-9]+(\.[0-9]+){15}" | head -n 1)
+                    if [ -n "$v6dec" ]; then
+                        ipv6="$v6dec"
+                        result=$(echo "$result" | sed "s/$v6dec//")
+                    fi
+                fi
                 ipv4=$(get_cgpaddr_ipv4 "$result")
+                if [ -z "$ipv4" ] && [ "$platform" = "asrmicro" ]; then
+                    # A76XX prints IPv4 unquoted as well
+                    ipv4=$(echo $result | grep -oE "([0-9]{1,3}\.){3}[0-9]{1,3}" | grep -v "^0\.0\.0\.0$" | head -n 1)
+                fi
             fi
             if [ -n "$ipv4" ] || [ -n "$ipv6" ];then
                 connect_status="Yes"
