@@ -851,6 +851,7 @@ define Device/huasifei_shf285
   DEVICE_VENDOR := Huasifei
   DEVICE_MODEL := SHF285
   DEVICE_PACKAGES := kmod-usb2 kmod-usb-ohci kmod-usb-serial kmod-usb-net-qmi-wwan uqmi kmod-usb-serial-option \
+  kmod-usb-net-cdc-ether kmod-usb-net-rndis kmod-usb-net-cdc-ncm kmod-usb-net-cdc-mbim \
   luci-app-qmodem luci-app-qmodem-mwan luci-light kmod-ipt-offload kmod-nf-flow iptables-mod-offload atenl
   SUPPORTED_DEVICES += huasifei,shf285
 endef
